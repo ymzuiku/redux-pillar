@@ -70,7 +70,7 @@ App.js file:
 ```js
 import React from 'react';
 import { connect } from 'redux-pillar';
-import { setNum } from './action';
+import { setNum } from './actions';
 
 class App extends React.PureComponent {
   componentDidMount() {
