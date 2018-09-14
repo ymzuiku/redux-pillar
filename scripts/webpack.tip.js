@@ -18,7 +18,7 @@ class Tip {
       package: resolve(rootPath, 'package.json'),
       entry: resolve(rootPath, 'src/index.js'),
       src: resolve(rootPath, 'src'),
-      dll: resolve(rootPath, 'lib'),
+      dll: resolve(rootPath, 'public/dll'),
       template: resolve(rootPath, 'public/index.html'),
     };
     this.isDev = isDev;

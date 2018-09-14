@@ -1,12 +1,11 @@
-import React from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { Map } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import { Provider, connect } from 'react-redux';
 
 function rootReducer(state = Map({}), actions) {
-  if (actions.fix) {
-    return actions.fix(state) || state;
+  if (actions.reducer) {
+    return actions.reducer(state) || state;
   }
   return state;
 }
@@ -22,10 +21,7 @@ const store = createStore(
 
 const storage = {
   localName: 'defaultIOKey',
-  save: (v, theKey) => {
-    if (!theKey) {
-      theKey = storage.localName;
-    }
+  save: (v, theKey = storage.localName) => {
     const theType = Object.prototype.toString.call(v);
     if (theType === '[object Object]') {
       localStorage.setItem(theKey, JSON.stringify(v));
@@ -35,10 +31,7 @@ const storage = {
       console.warn('Warn: storage.save() param is no a Object');
     }
   },
-  load: theKey => {
-    if (!theKey) {
-      theKey = storage.localName;
-    }
+  load: (theKey = storage.localName) => {
     try {
       const data = localStorage.getItem(theKey);
       if (data) {
@@ -51,6 +44,9 @@ const storage = {
       console.warn('load last localSate error');
     }
   },
+  clear: (theKey = storage.localName) => {
+    localStorage.setItem(theKey, {});
+  },
 };
 
 // 这里做自动保存的监听
@@ -58,20 +54,11 @@ const autoStorageSave = (localName, needSaveKeys) => {
   if (localName) {
     storage.localName = localName;
   }
-  const lastLocalData = storage.load(storage.localName);
-  if (lastLocalData) {
-    store.dispatch({
-      type: 'loadLastLocalData',
-      fix: function(state) {
-        return state.set(Map(lastLocalData));
-      },
-    });
-  }
   if (Object.prototype.toString.call(needSaveKeys) !== '[object Array]') {
     // eslint-disable-next-line
-    console.warn('autoSaveStorageKeys: params不是一个数组');
+    console.warn('autoSaveStorageKeys: params is no a Array');
   }
-  // 只有Auth和DataCenter的修改会激发IO;
+  // 只有Auth和DataCenter的修改会激发IO, lastDats保存之前的记录
   const lastDatas = {};
   needSaveKeys.forEach(v => {
     lastDatas[v] = undefined;
@@ -97,6 +84,19 @@ const autoStorageSave = (localName, needSaveKeys) => {
       });
     }
   });
+  //首次读取
+  const lastLocalData = storage.load(storage.localName);
+  if (Object.prototype.toString.call(lastLocalData) === '[object Object]') {
+    store.dispatch({
+      type: 'localStorageLoad: IO',
+      reducer: state => {
+        return fromJS({
+          ...state.toJS(),
+          ...lastLocalData,
+        });
+      },
+    });
+  }
 };
 
 export { Provider, storage, store, autoStorageSave, connect };
