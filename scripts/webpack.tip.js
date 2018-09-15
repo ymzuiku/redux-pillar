@@ -9,7 +9,7 @@ const autoprefixer = require('autoprefixer');
 const isDev = process.env.prod !== '1';
 
 class Tip {
-  constructor() {
+  constructor(paths, port=3300) {
     const rootPath = process.cwd();
     this.paths = {
       root: rootPath,
@@ -20,6 +20,7 @@ class Tip {
       src: resolve(rootPath, 'src'),
       dll: resolve(rootPath, 'public/dll'),
       template: resolve(rootPath, 'public/index.html'),
+      paths,
     };
     this.isDev = isDev;
     if (!isDev) {
@@ -38,7 +39,6 @@ class Tip {
       include: ['./src/**/*'],
       exclude: ['node_modules', '**/*.spec.ts'],
     };
-    this.port = 3300;
     this.stats = {
       errorsOnly: 'errors-only',
     };
@@ -61,7 +61,7 @@ class Tip {
     this.devServer = {
       contentBase: this.paths.public,
       watchContentBase: true,
-      port: this.port,
+      port: port,
       host: '0.0.0.0',
       useLocalIp: true,
       // hot: true, //开启有可能不显示内容
