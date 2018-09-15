@@ -16,11 +16,11 @@ module.exports = {
   },
   externals: {
     react: 'react',
-    reactDOM: 'react-dom',
+    'react-dom': 'react-dom',
     immutable: 'immutable',
     redux: 'redux',
-    reactRedux: 'react-redux',
-    reduxThunk: 'redux-thunk',
+    'react-redux': 'react-redux',
+    'redux-thunk': 'redux-thunk',
   },
   resolve: {
     extensions: tip.resolve.extensions,
