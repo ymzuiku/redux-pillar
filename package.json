@@ -1,6 +1,6 @@
 {
   "name": "redux-pillar",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "dll": [
     "react",
@@ -29,7 +29,6 @@
   "dependencies": {
     "immutable": "^3.8.2",
     "react": "^16.5.1",
-    "react-dom": "^16.5.1",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"

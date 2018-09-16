@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { Map, fromJS } from 'immutable';
 import { Provider, connect } from 'react-redux';
+import { Map, fromJS } from 'immutable';
 
 function rootReducer(state = Map({}), actions) {
   if (actions.reducer) {
@@ -10,14 +10,21 @@ function rootReducer(state = Map({}), actions) {
   return state;
 }
 
-const store = createStore(
-  rootReducer,
-  compose(
-    applyMiddleware(thunkMiddleware),
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__(),
-  ),
-);
+let store;
+if (
+  !(window.__REDUX_DEVTOOLS_EXTENSION__ || window.__REDUX_DEVTOOLS_EXTENSION__)
+) {
+  store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+} else {
+  store = createStore(
+    rootReducer,
+    compose(
+      applyMiddleware(thunkMiddleware),
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__(),
+    ),
+  );
+}
 
 const storage = {
   localName: 'defaultIOKey',

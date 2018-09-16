@@ -16,7 +16,6 @@ module.exports = {
   },
   externals: {
     react: 'react',
-    'react-dom': 'react-dom',
     immutable: 'immutable',
     redux: 'redux',
     'react-redux': 'react-redux',
